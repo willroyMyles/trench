@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: a88c0a893935fae4b974f9ee8cbfd3d1
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Curved Square
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: b61e8330713fc2d4197225b13dcbbe6f, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

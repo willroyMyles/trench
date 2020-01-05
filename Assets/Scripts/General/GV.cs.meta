@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 94c6ef9247dae314598b8985226d0802
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - playerGun: {instanceID: 0}
+  - PlayerMinion: {fileID: 2923680849320187827, guid: 63c6137c251b9d94987d388cb1ff4021,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
