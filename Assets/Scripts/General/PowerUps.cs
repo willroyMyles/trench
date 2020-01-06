@@ -53,7 +53,6 @@ public class PowerUps : MonoBehaviour
         if(type == PowerUptype.FireRateDecrease) GetComponent<Renderer>().material.SetTexture("_BaseMap", frd);
         if (type == PowerUptype.DamageIncrease) GetComponent<Renderer>().material.SetTexture("_BaseMap", di);
         if (type == PowerUptype.DamageDecrease) GetComponent<Renderer>().material.SetTexture("_BaseMap", dd);
-        
     }
 
     private void Update()

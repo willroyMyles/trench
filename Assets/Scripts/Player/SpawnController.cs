@@ -9,7 +9,7 @@ public class SpawnController : MonoBehaviour
     internal bool isPlayerControlled;
 
     float coolDownRate = 0;
-    float spawnRate = 9;
+    float spawnRate = 5;
     float powerUpSpwanRate = 12;
     float powerUpCoolDown = 0;
     bool shouldSpawnPowerUp = false;
@@ -18,11 +18,6 @@ public class SpawnController : MonoBehaviour
     bool ableToMove = false;
     float distanceToMove = .8f;
 
-    // to manage neural nets
-    int[] neuralNetworklayer = new int[] { 5, 50, 40, 2 };
-    List<NeuralNetwork> neuralNetworksList = new List<NeuralNetwork>();
-    NeuralNetwork nextNetworkToSpawn;
-    int maxBrainsToKeep = 1;
 
 
     private void Awake()
@@ -42,7 +37,7 @@ public class SpawnController : MonoBehaviour
     }
     public void ModifySpawnRate(bool decrease = true)
     {
-        if (spawnRate <= 3) return;
+        if (spawnRate <= .5f ) return;
         if (decrease) spawnRate -= .5f;
         else spawnRate += .5f;
     }
@@ -86,19 +81,18 @@ public class SpawnController : MonoBehaviour
     {
         if (GV.Singleton().IsSingleMode())
         {
-            Instantiate(GV.Singleton().powerUp, GV.Singleton().getRandompointOnPlane(), Quaternion.identity);
+            Instantiate(GV.Singleton().powerUp, GV.Singleton().getRandompointOnPlane(), GV.Singleton().powerUp.transform.rotation);
         }
         else
         {
-            //spawn one with increase and one with decrease
+            //spawn two powerups
+            Instantiate(GV.Singleton().powerUp, GV.Singleton().getRandompointOnPlane(), GV.Singleton().powerUp.transform.rotation);
+            Instantiate(GV.Singleton().powerUp, GV.Singleton().getRandompointOnPlane(), GV.Singleton().powerUp.transform.rotation);
+
+
         }
         powerUpCoolDown = 0;
 
-    }
-
-    public void UpdateNeuralNetworkList(NeuralNetwork brain)
-    {
-        neuralNetworksList.Add(brain);
     }
 
     public void Spawn()
@@ -116,53 +110,6 @@ public class SpawnController : MonoBehaviour
                 minion.transform.GetChild(0).GetChild(i).GetComponent<Renderer>().material.SetColor("_BaseColor", GV.Singleton().enemyColor);
             }
 
-            // add brain to minion
-            if(neuralNetworksList.Count >= maxBrainsToKeep)
-            {
-                neuralNetworksList.Sort();
-                var brain = neuralNetworksList.First();
-                brain.Mutate();
-                neuralNetworksList.Remove(brain);
-                minion.GetComponent<MinionMovement>().SetBrain(brain, this);
-
-            }
-            else
-            {
-                var brain = new NeuralNetwork(neuralNetworklayer);
-                brain.Mutate();
-                minion.GetComponent<MinionMovement>().SetBrain(brain, this);
-            }
-
-
-
-            
-
-
-            //if(neuralNetworksList.Count >= maxBrainsToKeep)
-            //{
-            //    //cull half and assign regular brain
-
-            //    neuralNetworksList.Sort();
-            //    var brain = neuralNetworksList.First();
-            //    neuralNetworksList.Remove(brain);
-            //    brain.Mutate();
-            //    minion.GetComponent<MinionMovement>().InitiateNeuralNetwork(brain, this, GV.Singleton().playerGoal);
-
-            //}
-            //else
-            //{
-            //    var brain = new NeuralNetwork(neuralNetworklayer);
-            //    brain.Mutate();
-            //    neuralNetworksList.Add(brain);
-            //    minion.GetComponent<MinionMovement>().InitiateNeuralNetwork(brain, this, GV.Singleton().playerGoal);
-            //}
-          
-
-
-            //bullet.GetComponent<ArtilleryBase>().setUpBall(transform.up, gameObject.tag);
-
-            //push player back
-            //consider moving turret
 
             StartCoroutine(movePlayerCoroutine(minion));
 

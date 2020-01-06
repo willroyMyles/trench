@@ -40,9 +40,9 @@ public class GunController : MonoBehaviour
     private void ConfirgueLineRenderer()
     {
         lineRenderer.enabled = false;
-        lineRenderer.startWidth = .1f;
-        lineRenderer.endWidth = .05f;
-        lineRenderer.startColor = new Color(.5f, .6f, .9f, .5f);
+        lineRenderer.startWidth = .04f;
+        lineRenderer.endWidth = .04f;
+        lineRenderer.startColor = new Color(.5f, .6f, .9f, .2f);
         lineRenderer.endColor = new Color(.5f, .6f, .9f, 0f);
     }
 
@@ -100,8 +100,8 @@ public class GunController : MonoBehaviour
 
         if (powerup == PowerUptype.FireRateIncrease) fireController.SetFirerate(stats.ModifyFireRate( true));
         if (powerup == PowerUptype.FireRateDecrease) fireController.SetFirerate(stats.ModifyFireRate( false));
-        if (powerup == PowerUptype.DamageIncrease) fireController.SetFirerate(stats.ModifyFireRate( false));
-        if (powerup == PowerUptype.DamageDecrease) fireController.SetFirerate(stats.ModifyFireRate( false));
+        if (powerup == PowerUptype.DamageIncrease) fireController.setDamageAddOn(stats.ModifyDamage( true));
+        if (powerup == PowerUptype.DamageDecrease) fireController.setDamageAddOn(stats.ModifyDamage( false));
 
 
         StartCoroutine(MovePowerupTobase(gameObject));
@@ -163,8 +163,7 @@ public class GunController : MonoBehaviour
 
     private void OnMouseDown()
     {
-        firstTouch = Input.mousePosition;
-        fireController.ResetCoolDownTime();
+        firstTouch = movedTouch = Input.mousePosition;
         ableToShoot = true;
         fireController.setAutoFire(ableToShoot);
         lineRenderer.enabled = ableToShoot;

@@ -15,13 +15,6 @@ public class MinionMovement : MonoBehaviour
     internal NavMeshAgent agent;
     MinionType type;
 
-    SpawnController neuralParent;
-    float distance;
-    float maxDistance = 10;
-    NeuralNetwork brain;
-    public float fitness;
-    bool bulletIncoming = true;
-    bool beenHit = true;
     private void Awake()
     {
         SetUp();
@@ -32,22 +25,6 @@ public class MinionMovement : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("artillery"))
-        {
-            bulletIncoming = true;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("artillery"))
-        {
-            bulletIncoming = false;
-        }
     }
 
     private void Update()
@@ -81,28 +58,14 @@ public class MinionMovement : MonoBehaviour
                 agent.transform.position = agent.nextPosition;
                 //if (agent.transform.position == agent.nextPosition && agent.isStopped) agent.isStopped = false;
                 //patrol
-                if (!agent.pathPending && agent.remainingDistance < .5f)
+                if (!agent.pathPending && agent.remainingDistance < .01f)
                 {
-                    distance = Vector3.Distance(transform.position, GV.Singleton().playerGoal.transform.position);
-                    float[] inputs = new float[5] { transform.position.x, transform.position.z, distance,Convert.ToInt32( beenHit), Convert.ToInt32( bulletIncoming )};
-                    float[] outputs = brain.FeedForward(inputs);
-                    var destination = new Vector3(outputs[0] * 1.6f, 0, outputs[1] * 4.4f);
-                    agent.SetDestination(destination);
-                    if (Vector3.Distance(transform.position, destination) <= .3f) brain.AddFitness(distance - maxDistance);
-                    else brain.AddFitness(maxDistance - distance);
-                    fitness = brain.GetFitness();
-                    if(beenHit) beenHit = false;
+                    agent.SetDestination(GetNextPositionBasedOffType());
                 }
             }
 
         }
 
-    }
-
-    public void SetBrain(NeuralNetwork newBrain, SpawnController controller)
-    {
-        brain = newBrain;
-        neuralParent = controller;
     }
 
     private Vector3 GetNextPositionBasedOffType()
@@ -111,19 +74,21 @@ public class MinionMovement : MonoBehaviour
 
         if(type == MinionType.Crossy) // should cross 10 times so increase by 1
         {
-            pos.z += 1;
-            pos.x *=  -1;
+            pos.z -= 1;
+            if (pos.x > 0) pos.x = Mathf.Abs(UnityEngine.Random.Range(0, GV.Singleton().playgroundSize.x)) * -1;
+            else pos.x = Mathf.Abs(UnityEngine.Random.Range(0, GV.Singleton().playgroundSize.x));
             return pos;
         }
-        if(type == MinionType.Hesitant) // should move down and up slowly increase its forward distance each time.  move forward two, move back one
+        if(type == MinionType.Hesitant) // should move down and up slowly increase its forward distance each time.  move forward two, move back one with random x
         {
-            if (hesitatntMoved) pos.z -= 1;
-            else pos.z += .5f;
+            if (hesitatntMoved) pos.z -= 2.7f;
+            else pos.z += 2.2f;
+            pos.x = UnityEngine.Random.Range(-GV.Singleton().playgroundSize.x / 2, GV.Singleton().playgroundSize.x/2);
             hesitatntMoved = !hesitatntMoved;
             return pos;
            // consider randomizing x
         }
-        if(type == MinionType.Straighty) // moves forward in a straight line  
+        if(type == MinionType.Straighty) // moves forward in a straight line  at reduced speed?
         {
 
         }
@@ -149,16 +114,6 @@ public class MinionMovement : MonoBehaviour
         gameObject.tag = playerControl ? "playerMinion" : "enemyMinion"; 
     }
 
-    public void MinusFromFitness()
-    {
-        brain.AddFitness(-100);
-        beenHit = true;
-    }
-
-    internal void DieCalled()
-    {
-       neuralParent.UpdateNeuralNetworkList(brain);
-    }
 
     /// <summary>
     /// sets type specified. 

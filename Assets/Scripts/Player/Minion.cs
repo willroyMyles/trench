@@ -13,14 +13,12 @@ public class Minion : MonoBehaviour
     FracturedWhole fracturedWhole;
     float damage = 0;
     float percentageOfDamage;
-    MinionMovement mm;
 
     private void Start()
     {
         renderer = GetComponentInChildren<Renderer>();
         if (transform.GetChild(0).TryGetComponent<FracturedWhole>(out var whole)) fracturedWhole = whole;
         GV.Singleton().gameEnded += DisableScript;
-        mm = GetComponent<MinionMovement>();
 
         SetStats();
     }
@@ -43,9 +41,19 @@ public class Minion : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("artillery"))
         {
+            
+
+
+            ApplyPushBack(collision.relativeVelocity * .015f);
             ApplyDamage(collision.gameObject.GetComponent<ArtilleryBase>().GetDamage());
             Destroy(collision.gameObject);
         }
+    }
+
+    public void ApplyPushBack(Vector3 dir)
+    {
+        //blow back?
+        agent.Move(dir * .3f);
     }
 
     private void ApplyDamage(float damage)
@@ -56,8 +64,9 @@ public class Minion : MonoBehaviour
         StartCoroutine( ChangeColor(stats.healthPoints));
         SlowDownSpeedByDamagePercent();
         stats.healthPoints -= damage;
-        mm.MinusFromFitness();
-        if (percentageOfDamage <= .5f && fracturedWhole) fracturedWhole.chipOffPiece(true); 
+        if (percentageOfDamage <= .5f && fracturedWhole) fracturedWhole.chipOffPiece(true);
+
+       
         
         if (stats.healthPoints <= 0) Die();
     }
@@ -130,7 +139,7 @@ public class Minion : MonoBehaviour
 
     private void Die()
     {
-        GetComponent<MinionMovement>().DieCalled();
+        FindObjectOfType<CameraShake>().shakeWithMagnitude(.03f);
         if (fracturedWhole) fracturedWhole.Collaspe();
         GV.Singleton().UpdateScoreText();
         DisableScript();

@@ -20,3 +20,5 @@ obj/*
 Temp/*
 UserSettings/*
 Trench.sln
+
+.vs/Trench/config/applicationhost.config

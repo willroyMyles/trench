@@ -15,15 +15,25 @@ public class FireController : MonoBehaviour
     bool autoFire = false;
     bool barrelMoving = false;
 
+    GameObject lightAndMuzzleHolder;
     internal float damageAddOn = 0;
 
     Vector3 finalPosition;
 
     void Start()
     {
+        lightAndMuzzleHolder = transform.GetChild(0).gameObject;
+        lightAndMuzzleHolder.SetActive(false);
+
     }
 
-    public void ResetCoolDownTime() => coolDownTime = 0;
+    IEnumerator FlashMuzzle()
+    {
+        lightAndMuzzleHolder.SetActive(true);
+        yield return new WaitForSecondsRealtime(.01f);
+        lightAndMuzzleHolder.SetActive(false);
+    }
+
 
     public void SetFirerate(float rate)
     {
@@ -64,9 +74,15 @@ public class FireController : MonoBehaviour
         {
             fire = true;
             var spawnPos = gameObject.transform.position + gameObject.transform.up * spawnDistance;
+
+            StartCoroutine(FlashMuzzle());
+            StartCoroutine(Camera.main.GetComponent<CameraShake>().kick());
             var bullet = Instantiate(bulletPrefab, spawnPos, Quaternion.identity);
             bullet.GetComponent<ArtilleryBase>().setUpBall( dir : transform.up,whoIBelongTo: gameObject.tag, damageAddOn: damageAddOn);
 
+            //instantiate shell
+            Instantiate(GV.Singleton().shell, transform.position + new Vector3(.3f, 0, .2f), GV.Singleton().shell.transform.rotation);
+            
             //push player back
             //consider moving turret
            // if(!barrelMoving)   StartCoroutine(MoveBarrel()); // isnt noticable

@@ -869,6 +869,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameController
       objectReference: {fileID: 0}
+    - target: {fileID: 681197710073517155, guid: beea67ac6551fd1408e92bd17a17a5dd,
+        type: 3}
+      propertyPath: gameModes
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: beea67ac6551fd1408e92bd17a17a5dd, type: 3}
 --- !u!114 &591369797 stripped
@@ -1019,7 +1024,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.34377003, g: 0.77413815, b: 0.8396226, a: 0}
+  m_BackGroundColor: {r: 0.34509805, g: 0.7686275, b: 0.83921576, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1576,6 +1581,16 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 3865706613627927143, guid: 9134d2e8beb7d2c47a07ade331373fab,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3865706613627927143, guid: 9134d2e8beb7d2c47a07ade331373fab,
+        type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9134d2e8beb7d2c47a07ade331373fab, type: 3}
 --- !u!1 &1864781469
@@ -2066,6 +2081,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 3865706613627927143, guid: 9134d2e8beb7d2c47a07ade331373fab,
+        type: 3}
+      propertyPath: m_Interactable
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9134d2e8beb7d2c47a07ade331373fab, type: 3}

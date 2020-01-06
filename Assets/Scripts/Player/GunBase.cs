@@ -9,7 +9,7 @@ namespace Assets.Scripts.Player
     class GunBase
     {
         internal float fireRate = .8f;
-        internal float damage = 1f;
+        internal float damage = 0f;
 
         float fireratecap = .1f;
 
@@ -20,8 +20,8 @@ namespace Assets.Scripts.Player
         public float ModifyFireRate(bool increase = true)
         {
             if (fireRate <= fireratecap) return fireRate;
-            if(increase)    fireRate -= .05f;
-            else    fireRate += .05f;
+            if(increase)    fireRate -= .15f;
+            else    fireRate += .18f;
 
             return fireRate;
         }
@@ -29,7 +29,7 @@ namespace Assets.Scripts.Player
         public float ModifyDamage(bool increase = true)
         {
             if (increase) damage += .5f;
-            else damage += .5f;
+            else damage -= .7f;
             return damage;
         }
 

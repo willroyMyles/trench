@@ -8,10 +8,15 @@ public class FracturedScript : MonoBehaviour
     internal float lifeTime = 15.2f;
     internal float currentTime = 0;
     internal float speed = 1;
+    bool finished = false;
     private void Update()
     {
         currentTime += Time.deltaTime;
-        if (currentTime >= lifeTime) StartCoroutine(SinkThenDestroy());
+        if (currentTime >= lifeTime)
+        {
+            StartCoroutine(SinkThenDestroy());
+            finished = true;
+        }
     }
 
     IEnumerator SinkThenDestroy()
@@ -26,9 +31,9 @@ public class FracturedScript : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void OnTriggerExit(Collider other)
+    private void OnCollision(Collision other)
     {
-        if (other.CompareTag("artillery"))
+        if (other.gameObject.CompareTag("artillery"))
         {
             StartCoroutine(SinkThenDestroy());
         }

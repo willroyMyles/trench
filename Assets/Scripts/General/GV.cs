@@ -33,14 +33,27 @@ public class GV : MonoBehaviour
     }
     private void Awake()
     {
-        instance = this;
-        DontDestroyOnLoad(this);
+
+
+            instance = this;
+        if (PlayerPrefs.HasKey("mode"))
+        {
+            SetGameMode((GameModes)PlayerPrefs.GetInt("mode", 2));
+        }
+        else
+        {
+            SetGameMode(gameModes);
+        }
+
+
+
         gameStart();
     }
 
     private void Start()
     {
-        
+        Debug.Log(PlayerPrefs.GetString("mode"));
+
     }
 
     private IEnumerator RemoveTouchText()
@@ -63,16 +76,17 @@ public class GV : MonoBehaviour
     public GameObject powerUp;
     public GameObject playerGoal;
     public GameObject gameOverCanvas;
+    public GameObject shell;
     internal GameObject playerOne;
     internal GameObject playerTwo;
 
-    Vector3 playgroundSize;
-    [SerializeField] internal GameModes gameModes = GameModes.Single;
+   internal Vector3 playgroundSize;
+    [SerializeField] internal GameModes gameModes = GameModes.Menu;
     internal Color enemyColor = new Color(1, .1f, .1f);
     internal int score = 0;
     internal bool powerUpAvailable = true;
     internal float level = 1;
-    internal float levelBase = 7;
+    internal float levelBase = 4;
     internal float generation = 0;
     internal bool showTouchText = true;
     internal bool hasGameEnded = false;
@@ -86,23 +100,39 @@ public class GV : MonoBehaviour
 
     public void SetGameModeAndLoadScene(GameModes mode)
     {
+
         SetGameMode(mode);
+        PlayerPrefs.SetInt("mode", (int) mode);
+        PlayerPrefs.Save();
         LoadGame();
+    }
+
+    private void OnLevelWasLoaded(int level)
+    {
+
+        
+        gameStart();
+
     }
 
     public void gameStart()
     {
+        
         if (gameModes != GameModes.Menu)
         {
-            playgroundSize = GameObject.Find("Plane").GetComponent<Renderer>().bounds.size;
+            playgroundSize = GameObject.Find("stage").transform.Find("Plane").GetComponent<Renderer>().bounds.size;
             scoreText = GameObject.Find("score").GetComponent<TMPro.TextMeshProUGUI>();
             touchText = GameObject.Find("touch text").GetComponent<TMPro.TextMeshProUGUI>();
             levelText = GameObject.Find("level text").GetComponent<TMPro.TextMeshProUGUI>();
-            gameOverCanvas = GameObject.Find("game over canvas");
-            gameOverCanvas.active = false;
             scoreText.text = score.ToString();
             StartCoroutine(RemoveTouchText());
+
         }
+    }
+
+    private void OnApplicationQuit()
+    {
+        PlayerPrefs.DeleteAll();
     }
 
     public void SetGameMode(GameModes mode)
@@ -125,7 +155,7 @@ public class GV : MonoBehaviour
         hasGameEnded = true;
         gameEnded();
         gameOverCanvas.SetActive(true);
-        gameOverCanvas.transform.GetChild(1).gameObject.GetComponent<TMPro.TextMeshProUGUI>().text = score.ToString();
+        gameOverCanvas.transform.GetChild(1).gameObject.GetComponent<TMPro.TextMeshProUGUI>().text = scoreText.text;
     }
 
     public Vector3 getRandompointOnPlane()
@@ -169,6 +199,8 @@ public class GV : MonoBehaviour
 
     public void LoadMainMenu()
     {
+        PlayerPrefs.SetInt("mode", 2);
+        PlayerPrefs.Save();
         SceneManager.LoadScene("main menu");
     }
 
